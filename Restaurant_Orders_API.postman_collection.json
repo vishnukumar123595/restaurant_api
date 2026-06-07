@@ -1,0 +1,112 @@
+{
+  "info": {
+    "name": "Restaurant Orders API",
+    "_postman_id": "restaurant-api-collection-2025",
+    "description": "Assessment API collection — all endpoints with auth header pre-set.\n\nSet the `base_url` and `api_key` collection variables before running.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000", "type": "string" },
+    { "key": "api_key",  "value": "restaurant-secret-key-2025",  "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Health Check (no auth)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] }
+      }
+    },
+    {
+      "name": "List All Orders (paginated)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "X-API-Key", "value": "{{api_key}}" }],
+        "url": {
+          "raw": "{{base_url}}/orders/?page=1&page_size=5",
+          "host": ["{{base_url}}"],
+          "path": ["orders", ""],
+          "query": [
+            { "key": "page",      "value": "1" },
+            { "key": "page_size", "value": "5" }
+          ]
+        },
+        "description": "Returns paginated list of all orders with full item and payment details.\n\nKey response fields:\n- `gross_total` — sum of all order line items\n- `payment_summary` — e.g. 'Card + Cash (split)'\n- `is_fully_paid` — reconciliation flag"
+      }
+    },
+    {
+      "name": "Get Single Order (Order 14 — split payment)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "X-API-Key", "value": "{{api_key}}" }],
+        "url": {
+          "raw": "{{base_url}}/orders/14",
+          "host": ["{{base_url}}"],
+          "path": ["orders", "14"]
+        },
+        "description": "Order 14 demonstrates a split Cash + Card payment. Notice `payment_summary: 'Card + Cash (split)'`."
+      }
+    },
+    {
+      "name": "Get Single Order (Order 15 — Refunded)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "X-API-Key", "value": "{{api_key}}" }],
+        "url": {
+          "raw": "{{base_url}}/orders/15",
+          "host": ["{{base_url}}"],
+          "path": ["orders", "15"]
+        },
+        "description": "Order 15 has a Refunded payment status."
+      }
+    },
+    {
+      "name": "Filter — Refunded Orders Only",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "X-API-Key", "value": "{{api_key}}" }],
+        "url": {
+          "raw": "{{base_url}}/orders/?payment_status=Refunded",
+          "host": ["{{base_url}}"],
+          "path": ["orders", ""],
+          "query": [{ "key": "payment_status", "value": "Refunded" }]
+        }
+      }
+    },
+    {
+      "name": "Unauthorized — Missing API Key (expect 401)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/orders/",
+          "host": ["{{base_url}}"],
+          "path": ["orders", ""]
+        },
+        "description": "Demonstrates 401 when API key is missing."
+      }
+    },
+    {
+      "name": "Not Found — Invalid Order ID (expect 404)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "X-API-Key", "value": "{{api_key}}" }],
+        "url": {
+          "raw": "{{base_url}}/orders/999",
+          "host": ["{{base_url}}"],
+          "path": ["orders", "999"]
+        }
+      }
+    },
+    {
+      "name": "Swagger Docs (browser)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{base_url}}/docs", "host": ["{{base_url}}"], "path": ["docs"] },
+        "description": "Open this URL in your browser to see the interactive Swagger UI."
+      }
+    }
+  ]
+}
