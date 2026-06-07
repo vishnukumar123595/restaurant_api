@@ -73,7 +73,7 @@ menus (menu_id, menu_name)
                                         payment_type, payment_status)
 ```
 
-## Key Design Decisions (mention in interview)
+## Key Design Decisions:
 
 1. **price stored in order_items** — not FK to item_sizes.
    Orders capture price-at-time-of-order; menu prices can change.
